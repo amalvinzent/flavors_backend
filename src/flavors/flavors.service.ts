@@ -79,9 +79,9 @@ export class FlavorsService {
           ?.split(', ')
           ?.map((item) => item?.trim())
 
-        let diff = data?.ingredients?.every((ingredient) =>
-          split?.includes(ingredient)
-        )
+        const diff =
+          data?.ingredients?.length == split?.length &&
+          data?.ingredients?.every((ingredient) => split?.includes(ingredient))
         if (diff) {
           new_arr.push(result[i])
         }
