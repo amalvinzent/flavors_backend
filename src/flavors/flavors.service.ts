@@ -71,7 +71,7 @@ export class FlavorsService {
   }
 
   async suggestor(data) {
-    if (data?.ingredients) {
+    if (data?.ingredients?.length) {
       let result: Records = await readFile('./src/flavors/data/flavors.json')
       let new_arr = []
       for (let i = 0; i < result?.length; i++) {
@@ -87,6 +87,6 @@ export class FlavorsService {
         }
       }
       return new_arr
-    }
+    } else return []
   }
 }
