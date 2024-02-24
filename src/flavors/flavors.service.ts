@@ -71,22 +71,17 @@ export class FlavorsService {
   }
 
   async suggestor(data) {
-    if (data?.ingredients?.length) {
-      let result: Records = await readFile('./src/flavors/data/flavors.json')
-      let new_arr = []
-      for (let i = 0; i < result?.length; i++) {
-        const split = result[i]?.ingredients
-          ?.split(', ')
-          ?.map((item) => item?.trim())
-
-        const diff =
-          data?.ingredients?.length == split?.length &&
-          data?.ingredients?.every((ingredient) => split?.includes(ingredient))
-        if (diff) {
-          new_arr.push(result[i])
-        }
-      }
-      return new_arr
-    } else return []
+    if (!data?.ingredients?.length) return []
+    const result: Records = await readFile('./src/flavors/data/flavors.json')
+    const flavors = result?.filter((flavor) => {
+      const split = flavor?.ingredients
+        ?.split(', ')
+        ?.map((item) => item?.trim())
+      return (
+        data?.ingredients?.length == split?.length &&
+        data?.ingredients?.every((ingredient) => split?.includes(ingredient))
+      )
+    })
+    return flavors
   }
 }
