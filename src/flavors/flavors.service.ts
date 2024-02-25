@@ -76,10 +76,12 @@ export class FlavorsService {
     const flavors = result?.filter((flavor) => {
       const split = flavor?.ingredients
         ?.split(', ')
-        ?.map((item) => item?.trim())
+        ?.map((v) => v?.split(' ')?.join('')?.toLowerCase())
       return (
         data?.ingredients?.length == split?.length &&
-        data?.ingredients?.every((ingredient) => split?.includes(ingredient))
+        data?.ingredients?.every((ingredient) =>
+          split?.includes(ingredient?.split(' ')?.join('')?.toLowerCase())
+        )
       )
     })
     return flavors
