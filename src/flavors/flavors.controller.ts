@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -38,6 +39,7 @@ export class FlavorsController {
   @Get(':id')
   async findById(@Param('id') id: string) {
     try {
+      if (!id) throw new BadRequestException('id should not be empty')
       const data = await this.flavorsService.findById(id)
       return new SuccessResponse(data, 'Success', HttpStatus.OK)
     } catch (error) {
