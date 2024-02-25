@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common'
 import { FlavorsService } from './flavors.service'
 import { SuccessResponse, ErrorResponse } from 'src/utils/utils'
-import { QueryParamsDto } from './dto/flavor.dto'
+import { QueryParamsDto, SuggestorDto } from './dto/flavor.dto'
 import { log } from 'console'
 
 @Controller('flavors')
@@ -51,7 +51,7 @@ export class FlavorsController {
   }
 
   @Post('suggestor/new')
-  async suggestor(@Body() payload) {
+  async suggestor(@Body(ValidationPipe) payload: SuggestorDto) {
     try {
       const data = await this.flavorsService.suggestor(payload)
       return new SuccessResponse(data, 'Success', HttpStatus.OK)

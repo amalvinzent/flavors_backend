@@ -4,7 +4,10 @@ import {
   IsNotEmpty,
   ValidateNested,
   IsEnum,
-  IsOptional
+  IsOptional,
+  IsArray,
+  ArrayNotEmpty,
+  isString
 } from 'class-validator'
 import { SingleProperty } from '../decorators/single-property.decorator'
 
@@ -67,4 +70,12 @@ export class QueryParamsDto {
 
   @IsOptional()
   readonly search: string
+}
+
+export class SuggestorDto {
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsString({ each: true })
+  @Type(() => String)
+  readonly ingredients: string[]
 }
