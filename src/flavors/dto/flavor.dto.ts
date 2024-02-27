@@ -6,8 +6,7 @@ import {
   IsEnum,
   IsOptional,
   IsArray,
-  ArrayNotEmpty,
-  isString
+  ArrayNotEmpty
 } from 'class-validator'
 import { SingleProperty } from '../decorators/single-property.decorator'
 

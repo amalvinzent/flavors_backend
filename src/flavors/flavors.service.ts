@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
-import { log } from 'console'
 import { readFile } from 'src/utils/utils'
 import { QueryParamsDto, SortOrder, SuggestorDto } from './dto/flavor.dto'
+import { log } from 'console'
 
 export type Records = Array<{
   key: string
@@ -20,21 +20,28 @@ export type Records = Array<{
 export class FlavorsService {
   async findAll(query_params: QueryParamsDto) {
     let result: Records = await readFile('./src/flavors/data/flavors.json')
-
     result = result?.filter((ob) => {
-      if (Object.values(ob).some((value) => Math.sign(Number(value)) === -1))
+      if (Object.values(ob)?.some((value) => Math.sign(Number(value)) === -1)) {
         return false
-      return Object.keys(query_params?.filter || {}).every((key) => {
-        return ob.hasOwnProperty(key) && ob[key] === query_params?.filter[key]
-      })
-    })
-
-    result = result?.filter((item) => {
-      return ['name', 'state', 'region'].some((key) => {
-        return String(item[key])
-          ?.toLowerCase()
-          ?.includes(query_params?.search?.toLowerCase())
-      })
+      }
+      if (Object.keys(query_params?.filter || {})?.length) {
+        const filter_match = Object.keys(query_params?.filter).every(
+          (key) =>
+            ob?.hasOwnProperty(key) && ob[key] === query_params?.filter[key]
+        )
+        if (!filter_match) {
+          return false
+        }
+      }
+      if (query_params?.search) {
+        return ['name', 'state', 'region'].some((key) => {
+          return ob[key]
+            ?.toLowerCase()
+            ?.replace(/\s+/g, '')
+            ?.includes(query_params?.search?.toLowerCase()?.replace(/\s+/g, ''))
+        })
+      }
+      return true
     })
 
     const sort_key = Object.keys(query_params?.sort)[0]
