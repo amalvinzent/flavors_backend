@@ -35,10 +35,17 @@ export class FlavorsService {
       }
       if (query_params?.search) {
         return ['name', 'state', 'region'].some((key) => {
-          return ob[key]
-            ?.toLowerCase()
-            ?.replace(/\s+/g, '')
-            ?.includes(query_params?.search?.toLowerCase()?.replace(/\s+/g, ''))
+          if (
+            !ob[key]
+              ?.toLowerCase()
+              ?.replace(/\s+/g, '')
+              ?.includes(
+                query_params?.search?.toLowerCase()?.replace(/\s+/g, '')
+              )
+          ) {
+            return false
+          }
+          return true
         })
       }
       return true
