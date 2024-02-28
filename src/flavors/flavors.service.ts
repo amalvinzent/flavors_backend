@@ -21,11 +21,15 @@ export class FlavorsService {
   async findAll(query_params: QueryParamsDto) {
     let result: Records = await readFile('./src/flavors/data/flavors.json')
     result = result?.filter((ob) => {
-      if (Object.values(ob)?.some((value) => Math.sign(Number(value)) === -1)) {
+      if (
+        Object.values(ob || [])?.some(
+          (value) => Math.sign(Number(value)) === -1
+        )
+      ) {
         return false
       }
-      if (Object.keys(query_params?.filter || {})?.length) {
-        const filter_match = Object.keys(query_params?.filter).every(
+      if (Object.keys(query_params?.filter || [])?.length) {
+        const filter_match = Object.keys(query_params?.filter || []).every(
           (key) =>
             ob?.hasOwnProperty(key) && ob[key] === query_params?.filter[key]
         )
@@ -51,8 +55,8 @@ export class FlavorsService {
       return true
     })
 
-    const sort_key = Object.keys(query_params?.sort)[0]
-    const sort_order = Object.values(query_params?.sort)[0]
+    const sort_key = Object.keys(query_params?.sort || [])[0]
+    const sort_order = Object.values(query_params?.sort || [])[0]
     result = result?.sort((a, b) => {
       const asc_desc = sort_order === SortOrder.ASC ? 1 : -1
       if (typeof a[sort_key] === 'number' && typeof b[sort_key] === 'number') {
