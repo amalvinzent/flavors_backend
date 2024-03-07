@@ -17,36 +17,3 @@ export class ErrorResponse {
     public statusCode: number
   ) {}
 }
-
-export async function readFile(file_path: string): Promise<Records> {
-  return new Promise((resolve, reject) => {
-    const stream = fs.createReadStream(file_path, {
-      encoding: 'utf8'
-    })
-    let raw = ''
-    stream.on('data', (chunk) => {
-      raw += chunk
-    })
-    stream.on('end', () => {
-      try {
-        const json = JSON.parse(raw)
-        resolve(json)
-      } catch (error) {
-        reject(
-          new HttpException(
-            `An error occurred while parsing the data: ${error?.message}`,
-            HttpStatus.BAD_REQUEST
-          )
-        )
-      }
-    })
-    stream.on('error', (error) => {
-      reject(
-        new HttpException(
-          `An error occurred while reading the file: ${error?.message}`,
-          HttpStatus.BAD_REQUEST
-        )
-      )
-    })
-  })
-}

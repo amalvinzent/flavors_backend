@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common'
-import { readFile } from 'src/utils/utils'
 import { QueryParamsDto, SortOrder, SuggestorDto } from './dto/flavor.dto'
-import { log } from 'console'
+import { flavors_data } from 'flavors'
 
 export type Records = Array<{
-  key: string
+  key: number
   name: string
   ingredients: string
   diet: string
@@ -19,7 +18,7 @@ export type Records = Array<{
 @Injectable()
 export class FlavorsService {
   async findAll(query_params: QueryParamsDto) {
-    const result: Records = await readFile('./src/flavors/data/flavors.json')
+    const result: Records = flavors_data()
     const filtered_results = result?.filter((ob) => {
       if (Object.values(ob || {}).some((value) => Number(value) < 0)) {
         return false
@@ -76,12 +75,12 @@ export class FlavorsService {
   }
 
   async findById(id: string) {
-    const result: Records = await readFile('./src/flavors/data/flavors.json')
-    return result?.filter((v) => v?.key == id)[0] || {}
+    const result: Records = flavors_data()
+    return result?.filter((v) => v?.key == Number(id))[0] || {}
   }
 
   async suggestor(data: SuggestorDto) {
-    const result: Records = await readFile('./src/flavors/data/flavors.json')
+    const result: Records = flavors_data()
     const flavors = result?.filter((flavor) => {
       const split = flavor?.ingredients
         ?.split(', ')
